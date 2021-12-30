@@ -38,6 +38,7 @@ jobs:
         run:   |
           conda env update -f environment.yml
           make bin-build
+          ./dist/cli --help
       # - name:  Install project
       #   shell: bash -l {0}
       #   run:   |
