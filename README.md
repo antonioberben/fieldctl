@@ -47,5 +47,5 @@ Fieldctl is built upon other open source code projects. Without these projects F
  - [Lima VM](https://github.com/lima-vm/lima)
  - [Vcluster](https://github.com/loft-sh/vcluster)
  - [k3s](https://github.com/k3s-io/k3s)
- - [MetalLB] (https://github.com/metallb/metallb)
+ - [MetalLB](https://github.com/metallb/metallb)
 
