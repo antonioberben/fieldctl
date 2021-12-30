@@ -34,10 +34,6 @@ jobs:
       - uses: conda-incubator/setup-miniconda@v2
         with:
           python-version:       ${{ matrix.python-version }}
-          mamba-version:        "*"
-          channels:             conda-forge,bioconda,defaults
-          channel-priority:     strict
-          # environment-file:     environment.yaml
           auto-update-conda:    true
       - name:  Install project
         shell: bash -l {0}
