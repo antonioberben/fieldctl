@@ -10,7 +10,7 @@ This CLI helps on making easy to create a VM with a k8s cluster in it and deploy
 
 Creating and deleting those vclusters is a matter of seconds. This helps on speeding up the development lifecycle.
 
-## Use
+## How to use
 
 The CLI is pretty simple and right to the point.
 
