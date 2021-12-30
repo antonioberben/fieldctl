@@ -33,13 +33,19 @@ jobs:
       #   run: ls -altr && echo aaaaaaaaaaaaaaaaaaaaaaaaaaa
       - uses: conda-incubator/setup-miniconda@v2
         with:
+          activate-environment: fieldctl
           python-version:       ${{ matrix.python-version }}
+          channels: conda-forge,spyder-ide
+          allow-softlinks: true
+          channel-priority: flexible
           auto-update-conda:    true
+          show-channel-urls: true
       - name:  Install project
         shell: bash -l {0}
         run:   |
-               conda install python=${{ matrix.python-version }}
-               ls -altr
+          conda env update -f environment.yml
+          # conda install python=${{ matrix.python-version }}
+          ls -altr
       # - name:  Install project
       #   shell: bash -l {0}
       #   run:   |
