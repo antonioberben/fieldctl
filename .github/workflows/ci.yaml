@@ -2,8 +2,8 @@ name: Python CI
 
 on:
   push:
-    tags:
-      - '*'
+    branches:
+      - feature/first-load
   workflow_dispatch: # Manual trigger
     inputs:
       also-release:
