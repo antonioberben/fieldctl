@@ -32,7 +32,6 @@ jobs:
           mamba-version:        "*"
           channels:             conda-forge,bioconda,defaults
           channel-priority:     strict
-          activate-environment: fieldctl
           environment-file:     environment.yaml
           auto-update-conda:    true
       - name:  Install project
