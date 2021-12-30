@@ -24,6 +24,11 @@ jobs:
         # os: [ ubuntu-latest ]
     steps:
       - uses: actions/checkout@v2
+      - name:  Install project
+        shell: bash -l {0}
+        run:   |
+               ls -altr
+               echo $(pwd)
       # - name: copy readme to package folder
       #   run: ls -altr && echo aaaaaaaaaaaaaaaaaaaaaaaaaaa
       - uses: conda-incubator/setup-miniconda@v2
