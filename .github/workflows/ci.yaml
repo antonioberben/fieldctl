@@ -21,35 +21,35 @@ jobs:
         # os: [ ubuntu-latest ]
     steps:
       - uses: actions/checkout@v2
-      # - uses: conda-incubator/setup-miniconda@v2
-      #   with:
-      #     activate-environment: fieldctl
-      #     python-version:       ${{ matrix.python-version }}
-      #     channels: conda-forge,spyder-ide
-      #     allow-softlinks: true
-      #     channel-priority: flexible
-      #     auto-update-conda:    true
-      #     show-channel-urls: true
-      # - name:  build cli
-      #   shell: bash -l {0}
-      #   run:   |
-      #     conda env update -f environment.yml
-      #     make bin-build
-      #     ./dist/cli --help
-      #     mv ./dist/cli ./dist/fieldctl
-      # - name: Release
-      #   uses: softprops/action-gh-release@v1
-      #   # if: startsWith(github.ref, 'refs/tags/')
-      #   with:
-      #     files: dist/fieldctl
-          
-
-      - name:  Install project
+      - uses: conda-incubator/setup-miniconda@v2
+        with:
+          activate-environment: fieldctl
+          python-version:       ${{ matrix.python-version }}
+          channels: conda-forge,spyder-ide
+          allow-softlinks: true
+          channel-priority: flexible
+          auto-update-conda:    true
+          show-channel-urls: true
+      - name:  Build CLI
         shell: bash -l {0}
         run:   |
-               echo "test2" > test.txt
+          conda env update -f environment.yml
+          make bin-build
+          ./dist/cli --help
+          mv ./dist/cli ./dist/fieldctl
       - name: Release
         uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
+        # if: startsWith(github.ref, 'refs/tags/')
         with:
-          files: test.txt
+          files: dist/fieldctl
+          
+
+      # - name:  Install project
+      #   shell: bash -l {0}
+      #   run:   |
+      #          echo "test2" > test.txt
+      # - name: Release
+      #   uses: softprops/action-gh-release@v1
+      #   if: startsWith(github.ref, 'refs/tags/')
+      #   with:
+      #     files: test.txt
