@@ -1,0 +1,16 @@
+mirrors:
+  docker.io:
+    endpoint:
+      - "http://127.0.0.1:5001"
+  gcr.io:
+    endpoint:
+      - "http://127.0.0.1:5002"
+  k8s.gcr.io:
+    endpoint:
+      - "http://127.0.0.1:5003"
+  quay.io:
+    endpoint:
+      - "http://127.0.0.1:5004"
+  local.registry.io:
+    endpoint:
+      - "http://127.0.0.1:5005"
