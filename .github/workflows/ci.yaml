@@ -39,7 +39,7 @@ jobs:
           mv ./dist/cli ./dist/fieldctl
       - name: Release
         uses: softprops/action-gh-release@v1
-        # if: startsWith(github.ref, 'refs/tags/')
+        if: startsWith(github.ref, 'refs/tags/')
         with:
           files: dist/fieldctl
           
