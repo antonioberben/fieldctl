@@ -42,7 +42,7 @@ def cluster(ctx):
 @cluster.command("list", help=f"List all vclusters in the context")
 @click.pass_obj
 def list(ctx):
-    helpers.run_command(f"vcluster list")
+    helpers.run_command(f"vcluster --context {ctx['KUBECONTEXT']} list")
     return
 
 
@@ -122,3 +122,5 @@ def delete(ctx, name):
     if return_code != 0:
         logger.error(f"Error deleting namespace. Please, fix manually in the cluster")
         raise click.Abort()
+    logger.info(f"Make sure to clean up the kubeconfig file. The context are not deleted from there. To know which environments are installed run: \n\n  <cli> cluster list")
+    logger.info(f"To switch back to the main cluster's context run: \n\n  kubectl --context config use-context {ctx['KUBECONTEXT']}")
