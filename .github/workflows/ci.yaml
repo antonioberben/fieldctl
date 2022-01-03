@@ -60,6 +60,7 @@ jobs:
       - name: Set up conda environment
         shell: bash -l {0}
         run: |
+          python --version
           python -m pip install -e .
           conda list
       - name:  Build CLI
