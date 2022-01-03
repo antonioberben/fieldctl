@@ -2,7 +2,7 @@ containerd:
   system: false
   user: true
 cpus: 4
-disk: 100GiB
+disk: 50GiB
 env: {}
 images:
 - arch: x86_64

@@ -81,6 +81,15 @@ def add_home_persisted_folder(ctx, config):
     data["env"][HOME_VAR_NAME] = ctx["PERSISTED_FOLDER"]
     with open(config, "w") as file:
         yaml.dump(data, file)
+        
+def update_cpus_and_disk(ctx, config, cpus, disk):
+    logger.info(f"Updating cpu to {cpus}")
+    with open(config) as file:
+        data = yaml.load(file, Loader=yaml.FullLoader)
+    data["cpus"] = int(cpus)
+    data["disk"] = f"{disk}Gib"
+    with open(config, "w") as file:
+        yaml.dump(data, file)
 
 
 def add_forwarded_port(ctx, config):
