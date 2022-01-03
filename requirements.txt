@@ -1,0 +1,6 @@
+click==8.0.3
+pytest==6.2.5
+pyinstaller==4.7
+PyYAML==6.0
+click-log==0.3.2
+black==19.3b0
