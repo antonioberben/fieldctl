@@ -131,12 +131,12 @@ def remove(ctx):
 
 @vm.command(
     "show-ssh",
-    help="Show the ssh command to access the Lima VM. You can run `eval(<cli> vm show-ssh)` to access directly",
+    help="Show the ssh command to access the Lima VM. You can run `eval(fieldctl vm show-ssh)` to access directly",
 )
 @click.pass_obj
 def show_ssh(ctx):
     logger.info(f"TIP: To access directly run:\n")
-    logger.info(f"    eval(<cli> vm show-ssh)\n\n\n")
+    logger.info(f"    eval(fieldctl vm show-ssh)\n\n\n")
     helpers.run_command(f"limactl show-ssh {ctx['VM_NAME']}")
     return
 

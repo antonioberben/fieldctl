@@ -4,9 +4,9 @@ This cli aims to help on operating a local environment. The intention is to wrap
 
 The first target is MacOS.
 
-## Background
+## Motivation
 
-You usually need to create ephemeral environments quickly to develop, test and debug.
+You, as a developer, usually need to create ephemeral environments quickly to develop, test and debug.
 
 These actions can occur quite often. And, in some cases, you rather prefer a clean environment than an already used one.
 
@@ -16,29 +16,63 @@ In a Linux OS with some flavours of k8s (kind, k3s, k0s), these actions can take
 
 In a MacOS, you might need to create a VM, making the repetitive process a time consumer (1 minute  each time can be quite annoying)
 
+The solution can be to leverage several tools (kima VM, vcluster, metallb). But that is too much work.
+
 This CLI helps on making easy to create a VM with a k8s cluster (k3s) and deploy vclusters.
 
 [Vcluster](https://www.vcluster.com/) is a technology which allows to have multiple isolated k8s clusters within one "main" one.
 
 Creating and deleting those `vclusters` is a matter of seconds. This helps on speeding up the development lifecycle.
 
+## Dependencies
+
+The CLI requires you to have already installed:
+- [Lima VM](https://github.com/lima-vm/lima#getting-started)
+- [vcluster](https://www.vcluster.com/docs/getting-started/setup#download-vcluster-cli)
+- [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl-macos/)
+
 ## How to use
 
-The CLI is pretty simple and right to the point.
-
-Download it and run:
+Download it and run to discover the commands:
 
 ```bash
-<cli> --help
-<cli> vm --help
-<cli> cluster --help
+fieldctl --help
+fieldctl vm --help
+fieldctl cluster --help
 ```
 
-### Dependencies
+### Examples
 
-The binary is shipped with `vcluster` embedded.
+```bash
+# Create the Lima VM where to deploy the cluster.
+# Notice that it will re-use your existing config file
+# k3s is used as main cluster. Metallb is used to expose services as LoadBalancer from you host machine
+fieldctl vm create
 
-The cli requires you to have installed `lima VM` and `kubectl`.
+# Create a virtual cluster (vcluster) with name: `demo-1`. 
+fieldctl cluster create -n demo-1
+
+kubectl get ns
+
+kubectl create ns test
+
+kubectl create deployment nginx --image=nginx -n test
+
+kubectl expose deployment nginx --port=80 --target-port=80 --type=LoadBalancer -n test
+
+export APP_IP=$(kubectl -n test get svc nginx -o jsonpath='{.status.loadBalancer.ingress[0].*}')
+
+curl $APP_IP
+# You should be able to access nginx
+
+fieldctl cluster create -n demo-2
+
+kubectl get ns
+# You should NOT see the test namespace because this is another environment
+
+# Delete the first cluster
+fieldctl cluster delete -n demo-1
+```
 
 ## DEV Notes
 
