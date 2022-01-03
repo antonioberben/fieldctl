@@ -1,55 +1,106 @@
 name: Python CI
 
-on: push
-  # workflow_dispatch: # Manual trigger
-  #   inputs:
-  #     also-release:
-  #       description: 'Run RELEASE if this attribute is `true`'     
-  #       required: true
-  #       default: 'false'
+on: 
+  push:
+  workflow_dispatch: # Manual trigger
+    inputs:
+      also-release:
+        description: 'Run RELEASE if this attribute is `true`'     
+        required: true
+        default: 'false'
 
 env:
   TERM: screen-256color
 
 jobs:
-  release:
+  build:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        python-version: [ "3.10" ]
-        os: [ macos-latest ]
-        # os: [ ubuntu-latest ]
+        include:
+          # - os: ubuntu-latest
+          #   pip_cache_path: ~/.cache/pip
+          #   experimental: false
+          - os: macos-latest
+            pip_cache_path: ~/Library/Caches/pip
+            experimental: false
+          # - os: windows-latest
+          #   pip_cache_path: ~\AppData\Local\pip\Cache
+          #   experimental: true
     steps:
       - uses: actions/checkout@v2
+      - name: Cache conda
+        uses: actions/cache@v2
+        env:
+          # Increase this value to reset cache if conda.yml has not changed
+          CACHE_NUMBER: 0
+        with:
+          path: ~/conda_pkgs_dir  # from: conda-incubator/setup-miniconda@v2
+          key: ${{ runner.os }}-conda-${{ env.CACHE_NUMBER }}-${{
+            hashFiles('conda.yml') }}
+
+      - name: Cache pip
+        uses: actions/cache@v2
+        with:
+          path: ${{ matrix.pip_cache_path }}
+          key: ${{ runner.os }}-pip--${{ env.CACHE_NUMBER }}-${{
+            hashFiles('requirements.txt') }}
+
+
       - uses: conda-incubator/setup-miniconda@v2
         with:
           activate-environment: fieldctl
-          python-version:       ${{ matrix.python-version }}
-          channels: conda-forge,spyder-ide
+          channel-priority: strict
+          python-version: "3.10"
+          environment-file: conda.yml
+          auto-activate-base: false
           allow-softlinks: true
-          channel-priority: flexible
-          auto-update-conda:    true
-          show-channel-urls: true
+          use-only-tar-bz2: true # IMPORTANT: This needs to be set for caching to work properly!
+          auto-update-conda: true  # Required for windows for `use-only-tar-bz2`
+      # - name: Set up conda environment
+      #   shell: bash -l {0}
+      #   run: |
+      #     python --version
+      #     python -m pip install -e .
+      #     conda list
       - name:  Build CLI
         shell: bash -l {0}
         run:   |
-          conda env update -f environment.yml
           make bin-build
-          ./dist/cli --help
-          mv ./dist/cli ./dist/fieldctl
-      - name: Release
-        uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
-        with:
-          files: dist/fieldctl
-          
+          ./dist/fieldctl --help
+      - name: zip the app for Mac
+        shell: bash -l {0}
+        if: matrix.os == 'macos-latest'
+        run: zip -r dist/fieldctl.zip dist/fieldctl
 
-      # - name:  Install project
-      #   shell: bash -l {0}
-      #   run:   |
-      #          echo "test2" > test.txt
+      - uses: actions/upload-artifact@v2
+        with:
+          name: dist
+          path: dist/fieldctl.zip
+
       # - name: Release
       #   uses: softprops/action-gh-release@v1
       #   if: startsWith(github.ref, 'refs/tags/')
       #   with:
-      #     files: test.txt
+      #     files: |
+      #       dist/fieldctl
+          
+  release:
+    name: "Release on tag 🚀"
+
+    runs-on: ubuntu-latest
+
+    needs: [build]
+
+    if: startsWith(github.ref, 'refs/tags/')
+    steps:
+      - uses: actions/download-artifact@v2
+        with:
+          name: dist
+          path: dist/
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            dist/fieldctl.zip
+          
