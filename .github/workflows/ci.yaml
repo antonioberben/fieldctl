@@ -17,15 +17,15 @@ jobs:
     strategy:
       matrix:
         include:
-          - os: ubuntu-latest
-            pip_cache_path: ~/.cache/pip
-            experimental: false
+          # - os: ubuntu-latest
+          #   pip_cache_path: ~/.cache/pip
+          #   experimental: false
           - os: macos-latest
             pip_cache_path: ~/Library/Caches/pip
             experimental: false
-          - os: windows-latest
-            pip_cache_path: ~\AppData\Local\pip\Cache
-            experimental: true
+          # - os: windows-latest
+          #   pip_cache_path: ~\AppData\Local\pip\Cache
+          #   experimental: true
     steps:
       - uses: actions/checkout@v2
       - name: Cache conda
