@@ -14,9 +14,9 @@ Every time a new instance of the cluster is needed, you need to destroy de clust
 
 In a Linux OS with some flavours of k8s (kind, k3s, k0s), these actions can take a small period of time.
 
-In a MacOS, you might need to create a VM, making the repetitive process a time consumer (1 minute  each time can be quite annoying)
+In a MacOS, you might need to create a VM, making the repetitive process a time consumer (a couple of minutes each time can kill you patience)
 
-The solution can be to leverage several tools (kima VM, vcluster, metallb). But that is too much work.
+The solution can be to leverage several tools (lima VM, vcluster, metallb). But that is too much work.
 
 This CLI helps on making easy to create a VM with a k8s cluster (k3s) and deploy vclusters.
 
