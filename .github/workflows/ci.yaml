@@ -1,12 +1,13 @@
 name: Python CI
 
-on: push
-  # workflow_dispatch: # Manual trigger
-  #   inputs:
-  #     also-release:
-  #       description: 'Run RELEASE if this attribute is `true`'     
-  #       required: true
-  #       default: 'false'
+on: 
+  push:
+  workflow_dispatch: # Manual trigger
+    inputs:
+      also-release:
+        description: 'Run RELEASE if this attribute is `true`'     
+        required: true
+        default: 'false'
 
 env:
   TERM: screen-256color
