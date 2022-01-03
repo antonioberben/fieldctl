@@ -1,18 +1,26 @@
 # Fieldctl CLI
 
-This cli aims to help on operating a local environment.
+This cli aims to help on operating a local environment. The intention is to wrap some complicated commands which are used to develop in local.
 
 The first target is MacOS.
 
 ## Background
 
-A developer usually needs to create ephemeral environments quickly to develop, test and debug.
+You usually need to create ephemeral environments quickly to develop, test and debug.
 
-This CLI helps on making easy to create a VM with a k8s cluster (k3s) in it and deploy vclusters.
+These actions can occur quite often. And, in some cases, you rather prefer a clean environment than an already used one.
+
+Every time a new instance of the cluster is needed, you need to destroy de cluster and re-create it.
+
+In a Linux OS with some flavours of k8s (kind, k3s, k0s), these actions can take a small period of time.
+
+In a MacOS, you might need to create a VM, making the repetitive process a time consumer (1 minute  each time can be quite annoying)
+
+This CLI helps on making easy to create a VM with a k8s cluster (k3s) and deploy vclusters.
 
 [Vcluster](https://www.vcluster.com/) is a technology which allows to have multiple isolated k8s clusters within one "main" one.
 
-Creating and deleting those vclusters is a matter of seconds. This helps on speeding up the development lifecycle.
+Creating and deleting those `vclusters` is a matter of seconds. This helps on speeding up the development lifecycle.
 
 ## How to use
 
