@@ -24,7 +24,7 @@ def cluster(ctx):
     
     - Mind the resources (CPU and memory) for the VM when creating many clusters
     """
-    returncode, _ = helpers.run_command(f"which { ctx['vcluster'] }", stdout=subprocess.PIPE)
+    returncode, _ = helpers.run_command(f"which vcluster", stdout=subprocess.PIPE)
     if returncode != 0:
         logger.error(
             f"You need to install vcluster (https://www.vcluster.com/docs/getting-started/setup#download-vcluster-cli)"
@@ -42,14 +42,14 @@ def cluster(ctx):
 @cluster.command("list", help=f"List all vclusters in the context")
 @click.pass_obj
 def list(ctx):
-    helpers.run_command(f"{ ctx['vcluster'] } list")
+    helpers.run_command(f"vcluster list")
     return
 
 
 @cluster.command("version", help="Show the current vlcuster version")
 @click.pass_obj
 def version(ctx):
-    helpers.run_command(f"{ ctx['vcluster'] } --version")
+    helpers.run_command(f"vcluster --version")
     return
 
 
@@ -66,14 +66,14 @@ def create(ctx, name):
     with open(TMP_VALUES_FILE, "w") as file:
         yaml.dump(values_data, file, default_flow_style=False)
     status_code, _ = helpers.run_command(
-        f"{ ctx['vcluster'] } --context {ctx['KUBECONTEXT']} create {name} -n {name} --expose -f {TMP_VALUES_FILE}"
+        f"vcluster --context {ctx['KUBECONTEXT']} create {name} -n {name} --expose -f {TMP_VALUES_FILE}"
     )
     if status_code != 0:
         logger.error(f"Error creating the new vcluster")
         raise click.Abort()
     logger.info("Update kube config file with new vcluster context")
     return_code, _ = helpers.run_command(
-        f"{ ctx['vcluster'] } --context {ctx['KUBECONTEXT']} connect {name} -n {name} --update-current"
+        f"vcluster --context {ctx['KUBECONTEXT']} connect {name} -n {name} --update-current"
     )
     if return_code != 0:
         logger.error(
@@ -96,7 +96,7 @@ def connect(ctx, name):
         raise click.Abort()
     logger.info("Update kube config file with new vcluster context")
     helpers.run_command(
-        f"{ ctx['vcluster'] } --context {ctx['KUBECONTEXT']} connect {name} -n {name} --update-current"
+        f"vcluster --context {ctx['KUBECONTEXT']} connect {name} -n {name} --update-current"
     )
     logger.info(f"You will be switched to the context automatically\n\n")
     helpers.run_command(
@@ -109,7 +109,7 @@ def connect(ctx, name):
 @click.pass_obj
 def delete(ctx, name):
     return_code, _ = helpers.run_command(
-        f"{ ctx['vcluster'] } --context {ctx['KUBECONTEXT']} delete {name} -n {name}"
+        f"vcluster --context {ctx['KUBECONTEXT']} delete {name} -n {name}"
     )
     if return_code != 0:
         logger.error(f"Error deleting the vcluster")

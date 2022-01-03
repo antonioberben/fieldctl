@@ -6,7 +6,7 @@ activate-environment:
 
 bin-build:
 	rm -rf dist build
-	pyinstaller cli.py --name fieldctl --add-data binaries:binaries --add-data provision:provision -F
+	pyinstaller cli.py --name fieldctl --add-data provision:provision -F
 	chmod +x ./dist/fieldctl
 
 remove-pycache:
