@@ -67,8 +67,7 @@ jobs:
         shell: bash -l {0}
         run:   |
           make bin-build
-          ./dist/cli --help
-          mv ./dist/cli ./dist/fieldctl
+          ./dist/fieldctl --help
       - name: zip the app for Mac
         shell: bash -l {0}
         if: matrix.os == 'macos-latest'
