@@ -57,7 +57,7 @@ jobs:
           auto-update-conda: true  # Required for windows for `use-only-tar-bz2`
       - name: Install dependencies
         run: |
-          python -m pip install -e .
+          pip install .
       - name:  Build CLI
         shell: bash -l {0}
         run:   |
