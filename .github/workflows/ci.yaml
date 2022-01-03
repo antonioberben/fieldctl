@@ -55,9 +55,9 @@ jobs:
           auto-activate-base: false
           use-only-tar-bz2: true # IMPORTANT: This needs to be set for caching to work properly!
           auto-update-conda: true  # Required for windows for `use-only-tar-bz2`
-      - name: Install fieldctl
+      - name: Install dependencies
         run: |
-          pip install .
+          python -m pip install -e .
       - name:  Build CLI
         shell: bash -l {0}
         run:   |
