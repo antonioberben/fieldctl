@@ -51,6 +51,7 @@ jobs:
         with:
           activate-environment: fieldctl
           channel-priority: strict
+          python-version: "3.10"
           environment-file: conda.yml
           auto-activate-base: false
           use-only-tar-bz2: true # IMPORTANT: This needs to be set for caching to work properly!
