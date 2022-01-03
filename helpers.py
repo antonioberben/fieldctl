@@ -44,14 +44,6 @@ def get_path_to_lima_template():
     path = os.path.join(resource_path, PROVISION_FOLDER, LIMA_CONFIG_TEMPLATE)
     return path
 
-
-def get_path_to_binary(binary):
-    resource_path = _get_current_path()
-    binary_path = os.path.join(resource_path, BINARIES_FOLDER, binary)
-    if not os.path.isfile(binary_path):
-        return binary
-    return binary_path
-
 def cluster_exist(ctx, name):
     logger.info(f"Check if cluster exist")
     _, out = run_command(

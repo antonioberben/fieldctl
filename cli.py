@@ -22,7 +22,6 @@ def cli(ctx, debug):
     ctx.obj["PERSISTED_FOLDER"] = os.environ.get("HOME") + "/.solo-fe"
     ctx.obj["DEFAULT_KUBECONFIG"] = os.environ.get("HOME") + "/.kube/config"
     ctx.obj["DEFAULT_PORT_FORWARD"] = 11443
-    ctx.obj["vcluster"] = helpers.get_path_to_binary("vcluster")
     ctx.obj["PROVISION_FOLDER"] = helpers.get_path_to_provision()
     ctx.obj["LIMA_TEMPLATE"] = helpers.get_path_to_lima_template()
 
