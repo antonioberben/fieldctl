@@ -91,7 +91,6 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          name: fieldctl-darwin-amd64-${{ env.TAG }}
           files: |
             fieldctl-darwin-amd64
           
