@@ -28,6 +28,9 @@ jobs:
           #   pip_cache_path: ~\AppData\Local\pip\Cache
           #   experimental: true
     steps:
+      - name: Set Version Variable
+        run: |
+          echo "TAG=${GITHUB_REF/refs\/tags\/}" >> $GITHUB_ENV
       - uses: actions/checkout@v2
       - name: Cache conda
         uses: actions/cache@v2
@@ -57,33 +60,20 @@ jobs:
           allow-softlinks: true
           use-only-tar-bz2: true # IMPORTANT: This needs to be set for caching to work properly!
           auto-update-conda: true  # Required for windows for `use-only-tar-bz2`
-      # - name: Set up conda environment
-      #   shell: bash -l {0}
-      #   run: |
-      #     python --version
-      #     python -m pip install -e .
-      #     conda list
       - name:  Build CLI
         shell: bash -l {0}
         run:   |
           make bin-build
-          ./dist/fieldctl --help
-      - name: zip the app for Mac
-        shell: bash -l {0}
-        if: matrix.os == 'macos-latest'
-        run: zip -r dist/fieldctl.zip dist/fieldctl
-
+          mv  ./dist/fieldctl ./dist/fieldctl-darwin-amd64
+          ./dist/fieldctl-darwin-amd64 --help
+      # - name: zip the app for Mac
+      #   shell: bash -l {0}
+      #   if: matrix.os == 'macos-latest'
+      #   run: zip -r dist/fieldctl.zip dist/fieldctl
       - uses: actions/upload-artifact@v2
         with:
-          name: dist
-          path: dist/fieldctl.zip
-
-      # - name: Release
-      #   uses: softprops/action-gh-release@v1
-      #   if: startsWith(github.ref, 'refs/tags/')
-      #   with:
-      #     files: |
-      #       dist/fieldctl
+          name: fieldctl
+          path: dist/fieldctl-darwin-amd64
           
   release:
     name: "Release on tag 🚀"
@@ -96,11 +86,12 @@ jobs:
     steps:
       - uses: actions/download-artifact@v2
         with:
-          name: dist
-          path: dist/
+          name: fieldctl
+          path: "."
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
+          name: fieldctl-darwin-amd64-${{ env.TAG }}
           files: |
-            dist/fieldctl.zip
+            fieldctl-darwin-amd64
           
