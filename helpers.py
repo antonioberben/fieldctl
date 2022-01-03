@@ -47,7 +47,7 @@ def get_path_to_lima_template():
 def cluster_exist(ctx, name):
     logger.info(f"Check if cluster exist")
     _, out = run_command(
-        f"{ ctx['vcluster'] } --context {ctx['KUBECONTEXT']} list --output json", stdout=subprocess.PIPE
+        f"vcluster --context {ctx['KUBECONTEXT']} list --output json", stdout=subprocess.PIPE
     )
     vclusters = json.loads(out)
     return len([i for i in vclusters if i["Name"] == name])
@@ -65,7 +65,7 @@ def wait_until_cluster_is_deleted(ctx, timeout_seconds, name):
             )
             raise click.Abort()
         _, out = run_command(
-            f"{ ctx['vcluster'] } --context {ctx['KUBECONTEXT']} list --output json", stdout=subprocess.PIPE
+            f"vcluster --context {ctx['KUBECONTEXT']} list --output json", stdout=subprocess.PIPE
         )
         vclusters = json.loads(out)
         if not len([i for i in vclusters if i["Name"] == name]):
