@@ -48,13 +48,16 @@ A folder will hold all the related files and persisted folders which are used wi
 
 NOTE: Internally, the cluster deployed in the VM leverages some docker registry as mirrors. The data is persisted in your host at `~.field` folder. Once you destroy the VM, you can recreate it and re-use the already downloaded images. This speeds up the installation time for your applications
 
+image::../docs/architecture.png[]
+
+
 ### Examples
 
 ```bash
 # Create the Lima VM where to deploy the cluster.
 # Notice that it will re-use your existing config file
-# k3s is used as main cluster. Metallb is used to expose services as LoadBalancer from you host machine
-fieldctl vm create
+# k3s is used as main cluster. Metallb is used to expose services as LoadBalancer to your host machine
+fieldctl vm create --memory 8 --cpus 4 --disk 50
 
 # Create a virtual cluster (vcluster) with name: `demo-1`. 
 fieldctl cluster create -n demo-1

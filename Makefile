@@ -11,3 +11,7 @@ bin-build:
 
 remove-pycache:
 	find . -type f -name '*.py[co]' -delete -o -type d -name __pycache__ -delete
+	
+download-release:
+	wget -O fieldctl https://github.com/antonioberben/fieldctl/releases/download/$$FIELD_VERSION/fieldctl-darwin-amd64
+	chmod +x fieldctl
