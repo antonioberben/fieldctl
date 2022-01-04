@@ -1,8 +1,8 @@
 containerd:
   system: false
   user: true
-cpus: 4
-disk: 50GiB
+cpus: 4 #This is overwritten by cli
+disk: 50GiB #This is overwritten by cli
 env: {}
 images:
 - arch: x86_64
@@ -13,7 +13,7 @@ images:
   location: https://cloud-images.ubuntu.com/impish/current/impish-server-cloudimg-amd64.img
 - arch: aarch64
   location: https://cloud-images.ubuntu.com/impish/current/impish-server-cloudimg-arm64.img
-memory: 16GiB
+memory: 8GiB #This is overwritten by cli
 mounts:
 # A extra volume will be auto-generated as HOME for this cli
 - location: /tmp/lima
