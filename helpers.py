@@ -17,7 +17,7 @@ click_log.basic_config(logger)
 
 BINARIES_FOLDER = "binaries"
 PROVISION_FOLDER = "provision"
-HOME_VAR_NAME = "SOLO_FIELD_HOME"
+HOME_VAR_NAME = "FIELDCTL_HOME"
 TMP_KUBECONFIG = "/tmp/kubeconfig"
 LIMA_CONFIG_TEMPLATE = "lima-vm.yaml.template"
 
