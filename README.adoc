@@ -20,7 +20,7 @@ The solution can be to leverage several tools (lima VM, vcluster, metallb). But 
 
 This CLI helps on making easy to create a VM with a k8s cluster (k3s) and deploy vclusters.
 
-[Vcluster](https://www.vcluster.com/) is a technology which allows to have multiple isolated k8s clusters within one "main" one.
+https://www.vcluster.com/[Vcluster] is a technology which allows to have multiple isolated k8s clusters within one "main" one.
 
 Creating and deleting those `vclusters` is a matter of seconds. This helps on speeding up the development lifecycle.
 
@@ -28,11 +28,11 @@ Creating and deleting those `vclusters` is a matter of seconds. This helps on sp
 
 The CLI requires you to have already installed:
 
-- [Lima VM](https://github.com/lima-vm/lima#getting-started)
-- [vcluster](https://www.vcluster.com/docs/getting-started/setup#download-vcluster-cli)
-- [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl-macos/)
+- https://github.com/lima-vm/lima#getting-started[Lima VM]
+- https://www.vcluster.com/docs/getting-started/setup#download-vcluster-cli[vcluster]
+- https://kubernetes.io/docs/tasks/tools/install-kubectl-macos/[kubectl]
 
-IMPORTANT: When installing `Lima` do not forget to install [vde_vmnet](https://github.com/lima-vm/vde_vmnet#install) to enable the network
+IMPORTANT: When installing `Lima` do not forget to install https://github.com/lima-vm/vde_vmnet#install[vde_vmnet] to enable the network
 
 ## How to use
 
@@ -85,7 +85,7 @@ fieldctl cluster delete -n demo-1
 
 **Why python?** The CLI could have been developed using any other language. However, python is easy to read and develop even not having much experience.
 
-As well, one of the packages is [pyinstaller](https://github.com/pyinstaller/pyinstaller) which facilitates the creation of the binary.
+As well, one of the packages is https://github.com/pyinstaller/pyinstaller[pyinstaller] which facilitates the creation of the binary.
 
 **Why click?** click is a python framework to develop CLIs. It is extremely friendly an intuitive making the development of your CLI quite easy to anybody to understand it and to collaborate.
 
@@ -101,7 +101,7 @@ Notice that:
 
 Fieldctl is built upon other open source code projects. Without these projects Fieldctl would never have seen the light.
 
-- [Lima VM](https://github.com/lima-vm/lima)
-- [Vcluster](https://github.com/loft-sh/vcluster)
-- [k3s](https://github.com/k3s-io/k3s)
-- [MetalLB](https://github.com/metallb/metallb)
+- https://github.com/lima-vm/lima[Lima VM]
+- https://github.com/loft-sh/vcluster[Vcluster]
+- https://github.com/k3s-io/k3s[k3s]
+- https://github.com/metallb/metallb[MetalLB]
