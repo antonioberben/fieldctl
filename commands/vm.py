@@ -80,7 +80,8 @@ def start(ctx):
 @vm.command("create", help="Create the Lima VM")
 @click.option("--config", "-c", help="Lima config file. Otherwise, it will use default")
 @click.option("--cpus", default=4, help="Lima CPUs")
-@click.option("--disk", default="50", help="Lima Disk space in Gi. Only the number 50 means 50GiB")
+@click.option("--disk", default="50", help="Lima Disk space in GiB. Expects a number. i.e. 50 means 50GiB")
+@click.option("--memory", default=8, help="Memory allocated for the VM in GiB. Expects a number. i.e. 8 means 8GiB")
 @click.option(
     "--connect",
     "-conn",
@@ -95,7 +96,7 @@ def start(ctx):
 )
 @click_log.simple_verbosity_option(logger)
 @click.pass_obj
-def create(ctx, config, cpus, disk, connect, kubeconfig):
+def create(ctx, config, cpus, disk, memory, connect, kubeconfig):
     logger.info(f"Persisted data will be created in {ctx['PERSISTED_FOLDER']}")
     shutil.copytree(
         f"{ctx['PROVISION_FOLDER']}", ctx["PERSISTED_FOLDER"], dirs_exist_ok=True
@@ -108,7 +109,7 @@ def create(ctx, config, cpus, disk, connect, kubeconfig):
         shutil.copy(ctx["LIMA_TEMPLATE"], filename)
     else:
         shutil.copy(config, filename)
-    helpers.update_cpus_and_disk(ctx, filename, cpus, disk)
+    helpers.update_allocated_resources(ctx, filename, cpus, disk, memory)
     helpers.add_home_persisted_folder(ctx, filename)
     helpers.add_forwarded_port(ctx, filename)
     helpers.run_command(f"limactl validate {filename}")

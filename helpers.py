@@ -82,11 +82,12 @@ def add_home_persisted_folder(ctx, config):
     with open(config, "w") as file:
         yaml.dump(data, file)
         
-def update_cpus_and_disk(ctx, config, cpus, disk):
+def update_allocated_resources(ctx, config, cpus, disk, memory):
     logger.info(f"Updating cpu to {cpus}")
     with open(config) as file:
         data = yaml.load(file, Loader=yaml.FullLoader)
     data["cpus"] = int(cpus)
+    data["memory"] = f"{memory}Gib"
     data["disk"] = f"{disk}Gib"
     with open(config, "w") as file:
         yaml.dump(data, file)
