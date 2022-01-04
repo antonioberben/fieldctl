@@ -59,6 +59,9 @@ image::docs/architecture.png[]
 # k3s is used as main cluster. Metallb is used to expose services as LoadBalancer to your host machine
 fieldctl vm create --memory 8 --cpus 4 --disk 50
 
+# To make the main cluster accessible from the host
+fieldctl vm connect
+
 # Create a virtual cluster (vcluster) with name: `demo-1`. 
 fieldctl cluster create -n demo-1
 
