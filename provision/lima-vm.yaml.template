@@ -57,5 +57,5 @@ provision:
     printf "Waiting for cluster to become ready"
     until sudo k3s kubectl get ns; do  printf "."; sleep 1; done
     # Install metallb
-    cd $SOLO_FIELD_HOME
+    cd $FIELDCTL_HOME
     ./install-metallb.sh

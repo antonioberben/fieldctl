@@ -118,7 +118,7 @@ def create(ctx, config, cpus, disk, connect, kubeconfig):
         f"Install cache registries since it cannot be done in provision scripts"
     )
     helpers.run_command(
-        f"limactl shell {ctx['VM_NAME']} sh -c 'cd $SOLO_FIELD_HOME; ./deploy-caches.sh'"
+        f"limactl shell {ctx['VM_NAME']} sh -c 'cd $FIELDCTL_HOME; ./deploy-caches.sh'"
     )
     if connect:
         helpers.connect_to_cluster(kubeconfig)
