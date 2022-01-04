@@ -19,7 +19,7 @@ def cli(ctx, debug):
     vm_name = "local-k3s"
     ctx.obj["VM_NAME"] = vm_name
     ctx.obj["KUBECONTEXT"] = vm_name
-    ctx.obj["PERSISTED_FOLDER"] = os.environ.get("HOME") + "/.solo-fe"
+    ctx.obj["PERSISTED_FOLDER"] = os.environ.get("HOME") + "/.field"
     ctx.obj["DEFAULT_KUBECONFIG"] = os.environ.get("HOME") + "/.kube/config"
     ctx.obj["DEFAULT_PORT_FORWARD"] = 11443
     ctx.obj["PROVISION_FOLDER"] = helpers.get_path_to_provision()
