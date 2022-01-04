@@ -27,9 +27,12 @@ Creating and deleting those `vclusters` is a matter of seconds. This helps on sp
 ## Dependencies
 
 The CLI requires you to have already installed:
-* [Lima VM](https://github.com/lima-vm/lima#getting-started)
-* [vcluster](https://www.vcluster.com/docs/getting-started/setup#download-vcluster-cli)
-* [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl-macos/)
+
+- [Lima VM](https://github.com/lima-vm/lima#getting-started)
+- [vcluster](https://www.vcluster.com/docs/getting-started/setup#download-vcluster-cli)
+- [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl-macos/)
+
+IMPORTANT: When installing `Lima` do not forget to install [vde_vmnet](https://github.com/lima-vm/vde_vmnet#install) to enable the network
 
 ## How to use
 
