@@ -48,7 +48,7 @@ A folder will hold all the related files and persisted folders which are used wi
 
 NOTE: Internally, the cluster deployed in the VM leverages some docker registry as mirrors. The data is persisted in your host at `~.field` folder. Once you destroy the VM, you can recreate it and re-use the already downloaded images. This speeds up the installation time for your applications
 
-image::../docs/architecture.png[]
+image::docs/architecture.png[]
 
 
 ### Examples
