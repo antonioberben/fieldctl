@@ -48,8 +48,8 @@ A folder will hold all the related files and persisted folders which are used wi
 
 NOTE: Internally, the cluster deployed in the VM leverages some docker registry as mirrors. The data is persisted in your host at `~.field` folder. Once you destroy the VM, you can recreate it and re-use the already downloaded images. This speeds up the installation time for your applications
 
-image::docs/architecture.png[]
 
+image::docs/architecture.png[]
 
 ### Examples
 
@@ -61,7 +61,12 @@ fieldctl vm create --memory 8 --cpus 4 --disk 50
 
 # To make the main cluster accessible from the host
 fieldctl vm connect
+```
 
+WARNING: If you have issues, go to <<Troubleshooting>>
+
+
+```bash
 # Create a virtual cluster (vcluster) with name: `demo-1`. 
 fieldctl cluster create -n demo-1
 
@@ -102,6 +107,60 @@ Notice that:
 - Work in progress. The cli is open to grow in any direction. For example: Add commands to test scenarios
 - No tests created. Being first iterations, there are no test to cover the results.
 - Code is not polished. Being firsts iterations, the code is still dirty
+
+## Troubleshooting
+
+- When running `fieldctl vm create --memory 8 --cpus 4 --disk 50`, I get this error:
+```text
+networks.yaml field `path.vdeSwitch` error: lstat /opt/vde/bin/vde_switch: no such file or directory
+```
+
+Then, you need to install https://github.com/lima-vm/vde_vmnet#install[vde_vmnet]
+
+- When installing https://github.com/lima-vm/vde_vmnet#install[vde_vmnet], the step: `sudo make PREFIX=/opt/vde install` fails
+
+Then, you might be missing some packages required to build and install `vde_vmnet`
+
+```bash
+brew install autoconf automake libtool
+```
+
+- `vd_vmnet` is installed but Lima cannot find it
+
+Then, run following commands to figure out the executable path to `vde_vmnet` and `vde_switch`
+```bash
+which vde_vmnet # i.e. /opt/vde/bin/vde_vmnet
+which vde_switch # i.e. /opt/vde/bin/vde_switch
+```
+
+Include those paths into the `$PATH` environment variable:
+
+```bash
+# Having `/opt/vde/bin/vde_vmnet` in $HOME/.bashrc or $HOME/.zshrc add:
+export PATH="/opt/vde/bin:$PATH"
+```
+
+Add `lima` to `sudoers`:
+
+```bash
+limactl sudoers | sudo tee /etc/sudoers.d/lima
+/private/etc/sudoers.d/ # You should see `lima`
+```
+
+Verify that `Lima` links correctly to executables and sodoer:
+
+```bash
+cat ~/.lima/_config/networks.yaml
+```
+
+And you should see something similar to:
+```yaml
+paths:
+  vdeSwitch: /opt/vde/bin/vde_switch
+  vdeVMNet: /opt/vde/bin/vde_vmnet
+  varRun: /private/var/run/lima
+  sudoers: /private/etc/sudoers.d/lima
+```
 
 ## Acknowledgements
 
