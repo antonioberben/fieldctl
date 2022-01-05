@@ -23,7 +23,7 @@ def vm(ctx):
     
     - Images will be persisted so that you can freely destroy the VM and recreating without loosing the images which were already pulled
     
-    - The name of the VM is local-k3s
+    - The name of the VM is field-vm
     """
     returncode, _ = helpers.run_command(f"which limactl", subprocess.PIPE)
     if returncode != 0:

@@ -16,7 +16,7 @@ from commands.vm import vm
 @click.pass_context
 def cli(ctx, debug):
     ctx.obj["DEBUG"] = debug
-    vm_name = "local-k3s"
+    vm_name = "field-vm"
     ctx.obj["VM_NAME"] = vm_name
     ctx.obj["KUBECONTEXT"] = vm_name
     ctx.obj["PERSISTED_FOLDER"] = os.environ.get("HOME") + "/.field"
