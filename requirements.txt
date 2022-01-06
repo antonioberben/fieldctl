@@ -4,3 +4,5 @@ pyinstaller==4.7
 PyYAML==6.0
 click-log==0.3.2
 black==19.3b0
+click-loglevel==0.4.0.post1
+coloredlogs==15.0.1
