@@ -223,7 +223,7 @@ def connect_to_main_cluster(ctx, kubeconfig_path):
         logger.error(out)
         raise click.Abort()
     main_cluster_config = yaml.load(out, Loader=yaml.FullLoader)
-    main_cluster_config = _update_context_name(main_cluster_config, ctx["VM_NAME"])
+    main_cluster_config = _update_context_name(main_cluster_config, ctx["MAIN_CONTEXT"])
     main_cluster_config = _update_context_server(
         main_cluster_config, f"https://127.0.0.1:{ctx['DEFAULT_PORT_FORWARD']}"
     )
@@ -263,3 +263,4 @@ def remove_context_from_kubeconfig(path, name):
             kubeconfig["contexts"].pop(i)
     with open(path, "w") as file:
         yaml.dump(kubeconfig, file, default_flow_style=False)
+        

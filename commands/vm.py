@@ -8,10 +8,10 @@ import helpers
 logger = logging.getLogger('root')
 
 
-@click.group()
+@click.group('vm')
 @click.pass_obj
 def vm(ctx):
-    """Operate a VM containing a main cluster
+    """Operate a Lima VM with a k3s cluster (main)
     
     To know more about Lima VM: https://github.com/lima-vm/lima
     
@@ -28,7 +28,7 @@ def vm(ctx):
     pass
 
 
-@vm.command("version", help="Show the Lima version")
+@vm.command("version", help="Show the Lima version is installed in you host")
 @click.pass_obj
 def version(ctx):
     helpers.new_run_command(f"limactl --version", show_output=True)
@@ -38,7 +38,7 @@ def version(ctx):
 @vm.command("stop", help="Stop the Lima VM")
 @click.pass_obj
 def stop(ctx):
-    if not helpers.vm_exist(ctx["VM_NAME"]):
+    if not helpers.vm_exist(ctx["MAIN_CONTEXT"]):
         logging.error("VM does not exist. Create it")
         raise click.Abort()
     returncode, out = helpers.new_run_command(f"limactl stop {ctx['VM_NAME']}", show_output=True)
@@ -52,7 +52,7 @@ def stop(ctx):
 @vm.command("start", help="Start teh Lima VM")
 @click.pass_obj
 def start(ctx):
-    if not helpers.vm_exist(ctx["VM_NAME"]):
+    if not helpers.vm_exist(ctx["MAIN_CONTEXT"]):
         logging.error("VM does not exist. Create it")
         raise click.Abort()
     returncode, out = helpers.new_run_command(f"limactl start --tty=false {ctx['VM_NAME']}", show_output=True)
@@ -133,7 +133,7 @@ def create(ctx, cpus, disk, memory, connect, kubeconfig):
 @vm.command("rm", help="Remove the the Lima VM")
 @click.pass_obj
 def remove(ctx):
-    if not helpers.vm_exist(ctx["VM_NAME"]):
+    if not helpers.vm_exist(ctx["MAIN_CONTEXT"]):
         logging.error("VM does not exist. Create it")
         raise click.Abort()
     returncode, out = helpers.new_run_command(f"limactl rm {ctx['VM_NAME']} -f")
@@ -160,7 +160,6 @@ def show_ssh(ctx):
     logging.info(out)
     return
 
-
 @vm.command("connect", help="Get k3s kubeconfig file to connect to the cluster")
 @click.option(
     "--kubeconfig",
@@ -170,9 +169,8 @@ def show_ssh(ctx):
 @click.pass_obj
 def connect(ctx, kubeconfig):
     kubeconfig_path = helpers.get_current_kubeconfig_path(ctx, kubeconfig)
-    if not helpers.vm_exist(ctx["VM_NAME"]):
+    if not helpers.vm_exist(ctx["MAIN_CONTEXT"]):
         logging.error("VM does not exist. Create it")
         raise click.Abort()
     helpers.connect_to_main_cluster(ctx, kubeconfig_path)
-    logging.info("Connect to main cluster in VM. Run:\n\n kubectl config get-contexts\t\tto se the new context")
-
+    logging.info("Connect to main cluster. Run:\n\n kubectl config get-contexts\t\tto see the new context")

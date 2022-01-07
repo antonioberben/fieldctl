@@ -11,7 +11,7 @@ logger = log.setup_custom_logger('root')
 from click_loglevel import LogLevel
 
 # from commands._examples import _examples
-from commands.cluster import cluster
+from commands.virtual_cluster import virtual_cluster
 from commands.vm import vm
 
 
@@ -37,26 +37,29 @@ def cli(ctx, log_level):
     
     Examples:
     
-    fieldctl vm create
-    
-    fieldctl vm connect
-    
-    # Create two virtual clusters
-    
-    fieldctl cluster create -n demo-1
-    
-    fieldctl cluster create -n demo-2
-    
-    # With --log-level
-    
-    fieldctl -l DEBUG vm stop
-    
-    fieldctl -l DEBUG vm start
+    \b
+            fieldctl vm create
+            fieldctl vm connect
+    \b
+            # With --log-level:
+            fieldctl -l DEBUG vm stop        
+            fieldctl -l DEBUG vm start
+    \b
+            # Create two virtual clusters:
+            fieldctl virtual create -n demo-1
+            fieldctl virtual create -n demo-2
+            
+    \b
+            # You do not need the VM. You can use your own main cluster:
+    \b
+            ## Create a vcluster having the current context as main cluster
+            virtual version -ctx
+    \b
+            ## Create a vcluster having the given context as main cluster
+            virtual version -ctx <my-main-cluster-context>
     """
     logger.setLevel(log_level)
-    vm_name = "field-vm"
-    ctx.obj["VM_NAME"] = vm_name
-    ctx.obj["KUBECONTEXT"] = vm_name
+    ctx.obj["MAIN_CONTEXT"] = "field-main"
     ctx.obj["PERSISTED_FOLDER"] = os.environ.get("HOME") + "/.field"
     ctx.obj["DEFAULT_KUBECONFIG"] = os.environ.get("HOME") + "/.kube/config"
     ctx.obj["DEFAULT_PORT_FORWARD"] = 11443
@@ -67,7 +70,7 @@ def cli(ctx, log_level):
 #### Add the command here ####
 # cli.add_command(_examples)
 cli.add_command(vm)
-cli.add_command(cluster)
+cli.add_command(virtual_cluster)
 ##############################
 
 
