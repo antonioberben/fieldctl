@@ -15,3 +15,10 @@ remove-pycache:
 download-release:
 	wget -O fieldctl https://github.com/antonioberben/fieldctl/releases/download/$$FIELD_VERSION/fieldctl-darwin-amd64
 	chmod +x fieldctl
+
+generate-automcomplete-files:
+	pip install --editable .
+	_FIELDCTL_COMPLETE=zsh_source fieldctl > autocomplete/fieldctl-complete.zsh
+	bash -c "_FIELDCTL_COMPLETE=bash_source fieldctl > autocomplete/fieldctl-complete.bash"
+	fish -c "_FIELDCTL_COMPLETE=fish_source fieldctl > autocomplete/fieldctl-complete.fish"
+	pip uninstall fieldctl

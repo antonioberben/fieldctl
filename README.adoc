@@ -51,6 +51,20 @@ NOTE: Internally, the cluster deployed in the VM leverages some docker registry 
 
 image::docs/architecture.png[]
 
+### Autocomplete
+
+Autocomplete scripts are in `autcomplete` folder. There is support for `bash`, `zsh` and `fish`
+
+- Bash
+
+Source `autocomplete/fieldctl-complete.bash` script in `~/.bashrc`.
+
+- Zsh
+Source `autocomplete/fieldctl-complete.zsh` script in `~/.zshrc`.
+
+- Fish
+Save the `autocomplete/fieldctl-complete.fish` script to `~/.config/fish/completions/foo-bar.fish`
+
 ### Examples
 
 ```bash
