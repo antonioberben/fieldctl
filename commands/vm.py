@@ -2,8 +2,9 @@ import logging
 import shutil
 
 import click
-import click_log
-import helpers
+import helpers.cluster_helper as cluster
+import helpers.vm_helper as vmh
+import helpers.shell_helper as sh
 
 logger = logging.getLogger('root')
 
@@ -11,7 +12,7 @@ logger = logging.getLogger('root')
 @click.group('vm')
 @click.pass_obj
 def vm(ctx):
-    """Operate a Lima VM with a k3s cluster (main)
+    """Operate a Lima VM with a k3s cluster (main cluster)
     
     To know more about Lima VM: https://github.com/lima-vm/lima
     
@@ -21,27 +22,28 @@ def vm(ctx):
     
     - Mind the resources (CPUs, disk and memory) for the VM when creating many virtual clusters
     """
-    returncode, _ = helpers.new_run_command(f"which limactl")
+    # Verify that limactl is installed in the host
+    returncode, _ = sh.run_command(f"which limactl")
     if returncode != 0:
         logger.error(f"You need to install limactl (https://github.com/lima-vm/lima)")
         raise click.Abort()
-    pass
 
 
 @vm.command("version", help="Show the Lima version is installed in you host")
 @click.pass_obj
 def version(ctx):
-    helpers.new_run_command(f"limactl --version", show_output=True)
+    # Returns limactl version
+    sh.run_command(f"limactl --version", show_output=True)
     return
 
 
 @vm.command("stop", help="Stop the Lima VM")
 @click.pass_obj
 def stop(ctx):
-    if not helpers.vm_exist(ctx["MAIN_CONTEXT"]):
+    if not vmh.vm_exist(ctx["MAIN_CONTEXT"]):
         logging.error("VM does not exist. Create it")
         raise click.Abort()
-    returncode, out = helpers.new_run_command(f"limactl stop {ctx['VM_NAME']}", show_output=True)
+    returncode, out = sh.run_command(f"limactl stop {ctx['MAIN_CONTEXT']}", show_output=True)
     if returncode != 0:
         logging.error(out)
         raise click.Abort()
@@ -52,10 +54,13 @@ def stop(ctx):
 @vm.command("start", help="Start teh Lima VM")
 @click.pass_obj
 def start(ctx):
-    if not helpers.vm_exist(ctx["MAIN_CONTEXT"]):
+    # Verify VM exist
+    if not vmh.vm_exist(ctx["MAIN_CONTEXT"]):
         logging.error("VM does not exist. Create it")
         raise click.Abort()
-    returncode, out = helpers.new_run_command(f"limactl start --tty=false {ctx['VM_NAME']}", show_output=True)
+    
+    # Starts VM
+    returncode, out = sh.run_command(f"limactl start --tty=false {ctx['MAIN_CONTEXT']}", show_output=True)
     if returncode != 0:
         logging.error("Error creating the VM")
         logging.error(out)
@@ -86,61 +91,85 @@ def start(ctx):
 )
 @click.option(
     "--kubeconfig",
-    "-kc",
-    help="Kubeconfig file to update. It will also check $KUBECONFIG or default to `~/.kube/config`",
+    help="Kubeconfig file to update",
+    show_default="$KUBECONFIG or `~/.kube/config`"
 )
-@click_log.simple_verbosity_option(logger)
 @click.pass_obj
 def create(ctx, cpus, disk, memory, connect, kubeconfig):
-    logger.info(f"Using following values:\n\ncpus: {cpus}\ndisk: {disk}GiB\nmemory: {memory}")
+    logger.info(f"Using following values:\ncpus: {cpus}\ndisk: {disk}GiB\nmemory: {memory}")
     logger.info(f"Persisted data will be created in {ctx['PERSISTED_FOLDER']}")
-    helpers.copy_persisted_folder(ctx['PROVISION_FOLDER'], ctx["PERSISTED_FOLDER"])
-    filename = f"/tmp/{ctx['VM_NAME']}.yaml"
+    # Copy the provision folder into the fodler which will be persisted into the VM. This is `~/.field`
+    vmh.copy_persisted_folder(ctx['PROVISION_FOLDER'], ctx["PERSISTED_FOLDER"])
+    filename = f"/tmp/{ctx['MAIN_CONTEXT']}.yaml"
+    
+    # Copy the template to a temporary location and update its values to include port, resources and persisted folder
     shutil.copy(ctx["LIMA_TEMPLATE"], filename)
-    helpers.update_allocated_resources(ctx, filename, cpus, disk, memory)
-    helpers.add_home_persisted_folder(ctx, filename)
-    helpers.add_forwarded_port(ctx, filename)
-    returncode, out = helpers.new_run_command(f"limactl validate {filename}")
+    vmh.update_allocated_resources(ctx, filename, cpus, disk, memory)
+    vmh.add_home_persisted_folder(ctx, filename)
+    vmh.add_forwarded_port(ctx, filename)
+    
+    # Validate the configuration works
+    returncode, out = sh.run_command(f"limactl validate {filename} --debug")
     if returncode != 0:
         logging.error("Error validating the VM")
         logging.error(out)
         raise click.Abort()
-    logger.info(f"Create the Lima VM with name: {ctx['VM_NAME']}")
-    helpers.new_run_command(f"limactl start --tty=false {filename}", show_output=True)
+    
+    # Create VM
+    logger.info(f"Create the Lima VM with name: {ctx['MAIN_CONTEXT']}")
+    returncode, _ = sh.run_command(f"limactl start --tty=false {filename}", show_output=True)
+    if returncode != 0:
+        logging.error("Error creating the machine. Try again:\n\n\tfieldctl vm rm\t\t\t-- Remove the created files\n\tfieldctl vm create\t\t-- Create again")
+        raise click.Abort()
+    
     logger.info(
         f"Install cache registries. This happens here since it cannot be done in provision scripts"
     )
-    returncode, out = helpers.new_run_command(
-        f"limactl shell {ctx['VM_NAME']} sh -c 'cd $FIELDCTL_HOME; ./deploy-caches.sh'"
+    # Install docker registry caches (grc, quay, k8s, docker). The context of this fodler is persisted in `~\fieldctl`
+    returncode, out = sh.run_command(
+        f"limactl shell --workdir='/' {ctx['MAIN_CONTEXT']} sh -c 'cd $FIELDCTL_HOME; ./deploy-caches.sh'"
     )
     if returncode != 0:
         logging.error("Error creating registries")
         logging.error(out)
         raise click.Abort()
+    
+    # Connect to the k3s (main cluster) provisioned in the VM. 
+    # The kubeconfig file will be updated with te new details for the main cluster context
     if connect:
         logging.info("Download kubeconfig from VM and mergng into the current one")
-        kubeconfig_path = helpers.get_current_kubeconfig_path(ctx, kubeconfig)
-        returncode, out = helpers.connect_to_main_cluster(ctx, kubeconfig_path)
+        kubeconfig_path = cluster.get_current_kubeconfig_path(ctx, kubeconfig)
+        returncode, out = cluster.connect_to_main_cluster(ctx, kubeconfig_path)
         if returncode != 0:
             logging.error(out)
             raise click.Abort()
-    logging.info("VM created. Now run:\n\n  fieldctl vm connect\t\tto connect to the main cluster\n\n  fieldctl cluster create -n <name>\t\tto create a virtual cluster")
+    logging.info("VM created. Now run:\n\n  fieldctl vm connect\t\t\t\tto connect to the main cluster\n\n  fieldctl virtual create -n <name>\t\tto create a virtual cluster")
     return
 
 
 
 
 @vm.command("rm", help="Remove the the Lima VM")
+@click.option(
+    "--kubeconfig",
+    help="Kubeconfig file to update",
+    show_default="$KUBECONFIG or `~/.kube/config`"
+)
 @click.pass_obj
-def remove(ctx):
-    if not helpers.vm_exist(ctx["MAIN_CONTEXT"]):
+def remove(ctx, kubeconfig):
+    # Verify VM exist
+    if not vmh.vm_exist(ctx["MAIN_CONTEXT"]):
         logging.error("VM does not exist. Create it")
         raise click.Abort()
-    returncode, out = helpers.new_run_command(f"limactl rm {ctx['VM_NAME']} -f")
+    
+    # Remove VM
+    returncode, out = sh.run_command(f"limactl rm {ctx['MAIN_CONTEXT']} -f")
     if returncode != 0:
         logging.error("Error deleting registries")
         logging.error(out)
         raise click.Abort()
+    kubeconfig = cluster.get_current_kubeconfig_path(ctx, kubeconfig)
+    cluster.remove_context_from_kubeconfig(kubeconfig, {ctx['MAIN_CONTEXT']})
     logging.info("VM deleted")
     return
 
@@ -153,7 +182,8 @@ def remove(ctx):
 def show_ssh(ctx):
     logger.info(f"TIP: To access directly run:\n")
     logger.info(f"    eval(fieldctl vm show-ssh)\n\n\n")
-    returncode, out = helpers.new_run_command(f"limactl show-ssh {ctx['VM_NAME']}")
+    # Shows the command to connect to the VM
+    returncode, out = sh.run_command(f"limactl show-ssh {ctx['MAIN_CONTEXT']}")
     if returncode != 0:
         logging.error(out)
         raise click.Abort()
@@ -168,9 +198,10 @@ def show_ssh(ctx):
 )
 @click.pass_obj
 def connect(ctx, kubeconfig):
-    kubeconfig_path = helpers.get_current_kubeconfig_path(ctx, kubeconfig)
-    if not helpers.vm_exist(ctx["MAIN_CONTEXT"]):
+    # Connect to the k3s (main cluster) deployed in the VM
+    kubeconfig_path = cluster.get_current_kubeconfig_path(ctx, kubeconfig)
+    if not vmh.vm_exist(ctx["MAIN_CONTEXT"]):
         logging.error("VM does not exist. Create it")
         raise click.Abort()
-    helpers.connect_to_main_cluster(ctx, kubeconfig_path)
-    logging.info("Connect to main cluster. Run:\n\n kubectl config get-contexts\t\tto see the new context")
+    cluster.connect_to_main_cluster(ctx, kubeconfig_path)
+    logging.info("Connect to main cluster. Run:\n\n kubectl config get-contexts\t\t-- to see the new context")

@@ -1,21 +1,26 @@
 import logging
 import coloredlogs
 
-grey = '\x1b[38;21m'
-blue = '\x1b[38;5;39m'
-yellow = '\x1b[38;5;226m'
-red = '\x1b[38;5;196m'
-bold_red = '\x1b[31;1m'
-reset = '\x1b[0m'
-
-def setup_custom_logger(name):
-    # formatter = logging.Formatter(fmt='%(asctime)s - %(levelname)s - %(module)s - %(message)s')
-
+def setup_custom_logger(name, loglevel):
     handler = logging.StreamHandler()
-    # handler.setFormatter(formatter)
-
     logger = logging.getLogger(name)
-    # logger.setLevel(logging.DEBUG)
     logger.addHandler(handler)
-    coloredlogs.install(level=name, logger=logger, fmt='%(levelname)s %(message)s')
+    custom_level_styles = {
+        "critical": {"bold": True, "color": "red"},
+        "debug": {"color": "green"},
+        "error": {"color": (234,86,82), "bold": True},
+        "info": {},
+        "notice": {"color": "magenta"},
+        "spam": {"color": "green", "faint": True},
+        "success": {"bold": True, "color": "green"},
+        "verbose": {"color": "blue"},
+        "warning": {"color": (235,204,52)},
+    }
+    coloredlogs.install(
+        level=loglevel,
+        logger=logger,
+        fmt="%(levelname)s %(message)s",
+        level_styles=custom_level_styles
+    )
+    coloredlogs.ColoredFormatter
     return logger

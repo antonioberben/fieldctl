@@ -41,7 +41,7 @@ Download it and run to discover the commands:
 ```bash
 fieldctl --help
 fieldctl vm --help
-fieldctl cluster --help
+fieldctl virtual --help
 ```
 
 A folder will hold all the related files and persisted folders which are used within the VM. The folder is located at `~/.field`
@@ -82,7 +82,7 @@ WARNING: If you have issues, go to <<Troubleshooting>>
 
 ```bash
 # Create a virtual cluster (vcluster) with name: `demo-1`. 
-fieldctl cluster create -n demo-1
+fieldctl virtual create -n demo-1
 
 kubectl get ns
 
@@ -97,13 +97,13 @@ export APP_IP=$(kubectl -n test get svc nginx -o jsonpath='{.status.loadBalancer
 curl $APP_IP
 # You should be able to access nginx
 
-fieldctl cluster create -n demo-2
+fieldctl virtual create -n demo-2
 
 kubectl get ns
 # You should NOT see the test namespace because this is another environment
 
 # Delete the first cluster
-fieldctl cluster delete -n demo-1
+fieldctl virtual delete -n demo-1
 ```
 
 ## DEV Notes
