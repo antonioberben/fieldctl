@@ -14,7 +14,7 @@ Every time a new instance of the cluster is needed, you need to destroy de clust
 
 In a Linux OS with some flavours of k8s (kind, k3s, k0s), these actions can take a small period of time.
 
-In a MacOS, you might need to create a VM, making the repetitive process a time consumer (a couple of minutes each time can kill you patience)
+In a MacOS, you might need to create a VM, making the repetitive process a time consumer (a couple of minutes each time can kill your patience)
 
 The solution can be to leverage several tools (lima VM, vcluster, metallb). But that is too much work.
 
@@ -41,7 +41,7 @@ Download it and run to discover the commands:
 ```bash
 fieldctl --help
 fieldctl vm --help
-fieldctl cluster --help
+fieldctl virtual --help
 ```
 
 A folder will hold all the related files and persisted folders which are used within the VM. The folder is located at `~/.field`
@@ -50,6 +50,20 @@ NOTE: Internally, the cluster deployed in the VM leverages some docker registry 
 
 
 image::docs/architecture.png[]
+
+### Autocomplete
+
+Autocomplete scripts are in `autcomplete` folder. There is support for `bash`, `zsh` and `fish`
+
+- Bash
+
+Source `autocomplete/fieldctl-complete.bash` script in `~/.bashrc`.
+
+- Zsh
+Source `autocomplete/fieldctl-complete.zsh` script in `~/.zshrc`.
+
+- Fish
+Save the `autocomplete/fieldctl-complete.fish` script to `~/.config/fish/completions/foo-bar.fish`
 
 ### Examples
 
@@ -68,7 +82,7 @@ WARNING: If you have issues, go to <<Troubleshooting>>
 
 ```bash
 # Create a virtual cluster (vcluster) with name: `demo-1`. 
-fieldctl cluster create -n demo-1
+fieldctl virtual create -n demo-1
 
 kubectl get ns
 
@@ -83,13 +97,13 @@ export APP_IP=$(kubectl -n test get svc nginx -o jsonpath='{.status.loadBalancer
 curl $APP_IP
 # You should be able to access nginx
 
-fieldctl cluster create -n demo-2
+fieldctl virtual create -n demo-2
 
 kubectl get ns
 # You should NOT see the test namespace because this is another environment
 
 # Delete the first cluster
-fieldctl cluster delete -n demo-1
+fieldctl virtual delete -n demo-1
 ```
 
 ## DEV Notes

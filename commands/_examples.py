@@ -28,5 +28,5 @@ def my_callback(ctx, param, value):
 @click.option('--my-callback', is_flag=True, callback=my_callback,
               expose_value=False, is_eager=True, 
               help='This is to create a callback function to be triggered when flag paramter is given')
-def demo(flag_example_1, flag_example_2, option):
+def _examples(flag_example_1, flag_example_2, option):
     print(f'test')
