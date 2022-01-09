@@ -14,7 +14,7 @@ Every time a new instance of the cluster is needed, you need to destroy de clust
 
 In a Linux OS with some flavours of k8s (kind, k3s, k0s), these actions can take a small period of time.
 
-In a MacOS, you might need to create a VM, making the repetitive process a time consumer (a couple of minutes each time can kill you patience)
+In a MacOS, you might need to create a VM, making the repetitive process a time consumer (a couple of minutes each time can kill your patience)
 
 The solution can be to leverage several tools (lima VM, vcluster, metallb). But that is too much work.
 
