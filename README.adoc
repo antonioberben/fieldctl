@@ -4,6 +4,8 @@ This cli aims to help on operating a local environment. The intention is to wrap
 
 The first target is MacOS.
 
+image::docs/fieldctl.gif[]
+
 ## Motivation
 
 You, as a developer, usually need to create ephemeral environments quickly to develop, test and debug.
@@ -43,8 +45,6 @@ fieldctl --help
 fieldctl vm --help
 fieldctl virtual --help
 ```
-
-image::docs/fieldctl.gif[]
 
 A folder will hold all the related files and persisted folders which are used within the VM. The folder is located at `~/.field`
 
