@@ -14,7 +14,7 @@ You, as a developer, usually need to create ephemeral environments quickly to de
 
 These actions can occur quite often. And, in some cases, you rather prefer a clean environment than an already used one.
 
-Every time a new instance of the cluster is needed, you need to destroy de cluster and re-create it.
+Every time a new instance of the cluster is needed, you need to destroy the cluster and re-create it.
 
 In a Linux OS with some flavours of k8s (kind, k3s, k0s), these actions can take a small period of time.
 
