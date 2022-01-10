@@ -4,6 +4,8 @@ This cli aims to help on operating a local environment. The intention is to wrap
 
 The first target is MacOS.
 
+**17 seconds to have a cluster up and running in local**
+
 image::docs/fieldctl.gif[]
 
 ## Motivation
