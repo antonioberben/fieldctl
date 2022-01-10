@@ -44,6 +44,8 @@ fieldctl vm --help
 fieldctl virtual --help
 ```
 
+image::docs/fieldctl.gif[]
+
 A folder will hold all the related files and persisted folders which are used within the VM. The folder is located at `~/.field`
 
 NOTE: Internally, the cluster deployed in the VM leverages some docker registry as mirrors. The data is persisted in your host at `~.field` folder. Once you destroy the VM, you can recreate it and re-use the already downloaded images. This speeds up the installation time for your applications
