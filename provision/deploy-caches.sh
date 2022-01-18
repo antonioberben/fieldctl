@@ -1,5 +1,6 @@
 #!/bin/sh
 
+nerdctl rm -f k3s-cache-docker || true
 nerdctl run -d \
     --restart=always \
     -v $(pwd)/registry/config-docker.yml:/etc/docker/registry/config.yml \
@@ -7,6 +8,7 @@ nerdctl run -d \
     -p 5001:5000 \
     --name "k3s-cache-docker" registry:2
 
+nerdctl rm -f k3s-cache-gcr || true
 nerdctl run -d \
     --restart=always \
     -v $(pwd)/registry/config-gcr.yml:/etc/docker/registry/config.yml \
@@ -14,6 +16,7 @@ nerdctl run -d \
     -p 5002:5000 \
     --name "k3s-cache-gcr" registry:2
 
+nerdctl rm -f k3s-cache-k8s || true
 nerdctl run -d \
     --restart=always \
     -v $(pwd)/registry/config-k8s.yml:/etc/docker/registry/config.yml \
@@ -21,6 +24,7 @@ nerdctl run -d \
     -p 5003:5000 \
     --name "k3s-cache-k8s" registry:2
 
+nerdctl rm -f k3s-cache-quay || true
 nerdctl run -d \
     --restart=always \
     -v $(pwd)/registry/config-quay.yml:/etc/docker/registry/config.yml \
@@ -28,6 +32,7 @@ nerdctl run -d \
     -p 5004:5000 \
     --name "k3s-cache-quay" registry:2
 
+nerdctl rm -f k3s-local-registry || true
 nerdctl run -d \
     --restart=always \
     -v $(pwd)/registry/data/local-registry:/var/lib/registry \
