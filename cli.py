@@ -12,6 +12,8 @@ from commands.vm import vm
 
 import helpers.vm_helper as vmh
 
+VERSION_FILE="version.txt"
+
 
 @click.group()
 @click.option(
@@ -74,6 +76,13 @@ def cli(ctx, log_level):
     base_path = getattr(sys, "_MEIPASS", os.path.dirname(os.path.abspath(__file__)))
     ctx.obj["PROVISION_FOLDER"] = vmh.get_path_to_provision(base_path)
     ctx.obj["LIMA_TEMPLATE"] = vmh.get_path_to_lima_template(base_path)
+    
+@cli.command("version", help="Displays current fieldctl version")
+@click.pass_obj
+def version(ctx):
+    with open(VERSION_FILE, "r") as file:
+        click.echo(f'{file.read()}')
+    return
 
 
 #### Add the command here ####
@@ -82,7 +91,10 @@ cli.add_command(vm)
 cli.add_command(virtual_cluster)
 ##############################
 
+# This solves https://github.com/pallets/click/issues/456#issuecomment-159543498
+def main():
+    return cli(obj={})
 
 if __name__ == "__main__":
-    cli(obj={})
+    main()
 

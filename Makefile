@@ -5,8 +5,9 @@ activate-environment:
 	@echo conda activate fieldctl
 
 bin-build:
+	./calculate-version.sh
 	rm -rf dist build
-	pyinstaller cli.py --name fieldctl --add-data provision:provision -F
+	pyinstaller cli.py --name fieldctl --add-data provision:provision --add-data version.txt:version.txt -F
 	chmod +x ./dist/fieldctl
 
 remove-pycache:

@@ -51,3 +51,5 @@ docs/_build/
 
 .DS_store
 fieldctl.spec
+
+version.txt
