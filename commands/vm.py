@@ -94,9 +94,17 @@ def start(ctx):
     help="Kubeconfig file to update",
     show_default="$KUBECONFIG or `~/.kube/config`"
 )
+@click.option(
+    "--yes", "-y",
+    help="Run command without asking",
+    is_flag=True, 
+    default=False
+)
 @click.pass_obj
-def create(ctx, cpus, disk, memory, connect, kubeconfig):
-    logger.info(f"Using following values:\ncpus: {cpus}\ndisk: {disk}GiB\nmemory: {memory}")
+def create(ctx, cpus, disk, memory, connect, kubeconfig, yes):
+    click.echo(f"the machine will be created with:\ncpus: {cpus}\ndisk: {disk}GiB\nmemory: {memory}GiB")
+    if not yes:
+        click.confirm('Use those values?', abort=True)
     logger.info(f"Persisted data will be created in {ctx['PERSISTED_FOLDER']}")
     # Copy the provision folder into the fodler which will be persisted into the VM. This is `~/.field`
     vmh.copy_persisted_folder(ctx['PROVISION_FOLDER'], ctx["PERSISTED_FOLDER"])
