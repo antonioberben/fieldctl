@@ -102,7 +102,7 @@ def create(ctx, name, main_context):
     # vcluster helm values
     values_data = {
         "rbac": {"clusterRole": {"create": True}},
-        "vcluster": {"image": "rancher/k3s:v1.21.4-k3s1"},
+        "vcluster": {"image": "rancher/k3s:v1.22.5-k3s1"},
         "syncer": {"extraArgs": ["--fake-nodes=false", "--sync-all-nodes"]},
     }
     
