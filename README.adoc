@@ -1,5 +1,7 @@
 # Fieldctl CLI
 
+DEPRECATED: This CLI is being deprecated since, in the end, it is just better to use vcluster cli directly. However, the architecture is still valid so I keep it here for anybody who might be interested.
+
 This cli aims to help on operating a local environment. The intention is to wrap some complicated commands which are used to develop in local.
 
 The first target is MacOS.
